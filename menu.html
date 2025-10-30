@@ -259,6 +259,7 @@
             border: 1px solid rgba(0, 0, 0, 0.05);
             position: relative;
             overflow: hidden;
+            width: 100%;
         }
 
         .menu-item::before {
@@ -285,7 +286,8 @@
 
         .item-info {
             flex: 1;
-            padding-right: 20px;
+            padding-right: 15px;
+            min-width: 0; /* Prevents flex item from overflowing */
             position: relative;
             margin-left: 5px; /* Add a small margin to prevent text from touching the syrup */
         }
@@ -448,33 +450,102 @@
         @media (max-width: 1024px) {
             .container {
                 flex-direction: column;
-                padding: 15px;
+                padding: 10px;
             }
             
             .left-section {
                 width: 100%;
-                padding: 30px 20px;
+                padding: 25px 15px;
                 border-radius: 12px;
             }
             
             .menu-header {
-                font-size: 1.7rem;
-                padding: 10px 20px;
-                margin-bottom: 30px;
-                width: 100%;
+                font-size: 1.5rem;
+                padding: 12px 15px;
+                margin: 0 0 20px 0;
+                width: calc(100% + 30px);
+                margin-left: -15px;
                 text-align: center;
+                border-radius: 0;
             }
             
             .nav-button {
-                padding: 10px 20px;
-                font-size: 14px;
-                right: 15px;
-                top: 15px;
+                padding: 12px 20px;
+                font-size: 15px;
+                right: 10px;
+                top: 10px;
+                z-index: 1000;
+                min-width: 100px;
+            }
+            
+            .menu-category {
+                margin-bottom: 25px;
             }
             
             .menu-item {
                 margin-bottom: 20px;
-                padding: 20px 15px;
+                padding: 18px 12px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .item-info {
+                width: 100%;
+                padding: 0;
+            }
+            
+            .item-info h3 {
+                font-size: 1.3rem;
+                margin-bottom: 8px;
+            }
+            
+            .item-info p {
+                font-size: 0.95rem;
+                line-height: 1.5;
+                margin-bottom: 12px;
+            }
+            
+            .item-price {
+                font-size: 1.3rem;
+                margin-top: 5px;
+            }
+            
+            .pancake-image {
+                height: 200px;
+                margin-top: 20px;
+                border-radius: 12px;
+            }
+
+            .section-title {
+                font-size: 28px;
+                margin: 20px 0 15px;
+                text-align: center;
+            }
+            
+            .contact-section {
+                flex-direction: column;
+                gap: 15px;
+                margin-top: 30px;
+                padding-top: 20px;
+            }
+            
+            .contact-item {
+                justify-content: center;
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-header {
+                font-size: 1.8rem;
+                padding: 10px 15px;
+                margin: 0 -15px 20px -15px;
+            }
+            
+            .menu-item {
+                padding: 15px 12px;
+                margin-bottom: 15px;
             }
             
             .item-info h3 {
@@ -485,19 +556,8 @@
                 font-size: 0.9rem;
             }
             
-            .pancake-image {
-                height: 100%;
-            }
-
-            .section-title {
-                font-size: 32px;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .menu-header {
-                font-size: 2rem;
-                padding: 12px 25px;
+            .item-price {
+                font-size: 1.2rem;
             }
             
             .menu-item {
