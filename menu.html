@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Menu - Tasty Pancakes | Sparks Snack Bar</title>
+    <meta name="description" content="Explore our delicious pancake menu. From classic buttermilk to speciality pancakes, we have something for everyone at Sparks Snack Bar.">
+    <meta name="theme-color" content="#ff7536">
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Chewy&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="css/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Chewy&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="css/styles.css">
+    </noscript>
+    <style>
+        :root {
+            --primary: #ff7536;
+            --primary-dark: #c32f09;
+            --primary-light: #ff9a1f;
+            --text: #2d3436;
+            --light-bg: #fff9f5;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --border-radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 50%, var(--primary-light) 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            color: var(--text);
+            line-height: 1.6;
+            animation: gradientShift 15s ease infinite;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background: linear-gradient(135deg, #ff7536 0%, #c32f09 50%, #ff6b1f 100%); }
+            50% { background: linear-gradient(135deg, #ff8547 0%, #d63f1a 50%, #ff7a2f 100%); }
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            z-index: 100;
+            transition: top 0.3s;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1280px;
+            margin: 0 auto;
+            gap: 40px;
+            align-items: flex-start;
+            position: relative;
+            z-index: 1;
+            padding: 20px 0;
+        }
+
+        .left-section {
+            flex: 1;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 50px 40px;
+            box-shadow: var(--shadow);
+            position: relative;
+            animation: slideInLeft 0.8s ease-out;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+        }
+
+        .left-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .menu-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 2.2rem;
+            font-weight: 800;
+            font-family: 'Chewy', cursive;
+            letter-spacing: 2px;
+            margin: 0 0 40px 0;
+            display: inline-block;
+            box-shadow: 0 8px 20px rgba(255, 117, 54, 0.3);
+            animation: slideDown 0.6s ease-out;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .menu-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-100%);
+            transition: 0.5s;
+        }
+
+        .menu-header:hover::after {
+            transform: translateX(100%);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Navigation Button */
+        .nav-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(255, 179, 77, 0.4);
+            transition: var(--transition);
+            z-index: 100;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(255, 179, 77, 0.6);
+        }
+
+        .logo-top {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .logo-top:hover {
+            transform: rotate(5deg) scale(1.05);
+        }
+
+        .logo-text {
+            font-size: 48px;
+            font-weight: bold;
+            color: #ff6f00;
+            letter-spacing: 2px;
+        }
+
+        .logo-subtitle {
+            font-size: 12px;
+            color: #ff6f00;
+            letter-spacing: 1px;
+        }
+
+        .menu-category {
+            margin: 50px 0 20px;
+            position: relative;
+        }
+
+        .menu-category h2 {
+            font-family: 'Chewy', cursive;
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .menu-category h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 3px;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            padding: 20px 20px 20px 30px; /* Increased left padding to prevent text overlap */
+            border-radius: 12px;
+            background: var(--white);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-item::before {
+            content: '';
+            position: absolute;
+            top: 10px; /* Add top and bottom spacing */
+            left: 0;
+            width: 5px;
+            height: calc(100% - 20px); /* Adjust height to account for top/bottom spacing */
+            background: linear-gradient(to bottom, var(--primary), var(--primary-light));
+            transition: var(--transition);
+            border-radius: 0 3px 3px 0; /* Add rounded corners to the left edge */
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border-color: rgba(255, 117, 54, 0.2);
+        }
+
+        .menu-item:hover::before {
+            width: 8px;
+        }
+
+        .item-info {
+            flex: 1;
+            padding-right: 20px;
+            position: relative;
+            margin-left: 5px; /* Add a small margin to prevent text from touching the syrup */
+        }
+
+        .item-info h3 {
+            font-size: 1.3rem;
+            color: var(--text);
+            margin-bottom: 8px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+
+        .item-info h3 .veg-indicator {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #4caf50;
+            margin-right: 10px;
+            position: relative;
+        }
+
+        .item-info h3 .veg-indicator::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .item-info p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .item-price {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--primary);
+            transition: var(--transition);
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding: 0 10px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .item-price::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 10px;
+            width: 30px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        .menu-item:hover .item-price::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .syrup-badge {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 160px;
+            height: 160px;
+            background: linear-gradient(135deg, #ffeb3b 0%, #ffd54f 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(255, 235, 59, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.3);
+            font-weight: 800;
+            font-size: 18px;
+            z-index: 5;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.05); }
+        }
+
+        .contact-section {
+            display: flex;
+            gap: 30px;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #eee;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .contact-icon {
+            font-size: 24px;
+        }
+
+        .delivery-badge {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            background: #ff6f00;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .delivery-icon {
+            font-size: 28px;
+        }
+
+        .right-section {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pancake-image {
+            width: 100%;
+            height: 600px;
+            background: linear-gradient(135deg, #ffd89b 0%, #fff 100%);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #999;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+                padding: 15px;
+            }
+            
+            .left-section {
+                width: 100%;
+                padding: 30px 20px;
+                border-radius: 12px;
+            }
+            
+            .menu-header {
+                font-size: 1.7rem;
+                padding: 10px 20px;
+                margin-bottom: 30px;
+                width: 100%;
+                text-align: center;
+            }
+            
+            .nav-button {
+                padding: 10px 20px;
+                font-size: 14px;
+                right: 15px;
+                top: 15px;
+            }
+            
+            .menu-item {
+                margin-bottom: 20px;
+                padding: 20px 15px;
+            }
+            
+            .item-info h3 {
+                font-size: 1.2rem;
+            }
+            
+            .item-info p {
+                font-size: 0.9rem;
+            }
+            
+            .pancake-image {
+                height: 100%;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .menu-header {
+                font-size: 2rem;
+                padding: 12px 25px;
+            }
+            
+            .menu-item {
+                flex-direction: column;
+                padding: 25px 20px;
+            }
+            
+            .item-info {
+                padding-right: 0;
+                margin-bottom: 15px;
+                width: 100%;
+            }
+            
+            .item-price {
+                align-self: flex-start;
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .left-section {
+                padding: 30px 20px;
+            }
+
+            .logo-top {
+                position: static;
+                margin-bottom: 20px;
+            }
+
+            .menu-header {
+                font-size: 20px;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+
+            .contact-section {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="nav-button">🏠 Home</a>
+
+    <div class="container">
+        <div class="left-section">
+            <div class="logo-top">
+                <div class="logo-text">S</div>
+            </div>
+
+            <div class="menu-header">MENU</div>
+
+            <div class="menu-section">
+                <h2 class="section-title">Dry Pancakes</h2>
+                
+                <div class="menu-item">
+                    <div class="item-name">TREASURE MIX<br>(SMALL)</div>
+                    <div class="item-price">₵30</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-name">MARVEL MIX<br>(MEDIUM)</div>
+                    <div class="item-price">₵50</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-name">GLORIOUS MIX<br>(LARGE)</div>
+                    <div class="item-price">₵70</div>
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <h2 class="section-title">Fluffy Mini<br>Pancakes</h2>
+                
+                <div class="menu-item">
+                    <div class="item-name">MINI FLUFF FRENZY<br>(10 PIECES)</div>
+                    <div class="item-price">₵30</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-name">DOUBLE DELIGHT BITES<br>(20 PIECES)</div>
+                    <div class="item-price">₵40</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-name">FLUFF FRENZY FEAST<br>(30 PIECES)</div>
+                    <div class="item-price">₵50</div>
+                </div>
+            </div>
+
+            <div class="syrup-badge">
+                <div>SYRUP<br>₵10<br>PER CUP</div>
+            </div>
+
+            <div class="contact-section">
+                <div class="contact-item">
+                    <span class="contact-icon">💬</span>
+                    <span>0538293775</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">📷</span>
+                    <span>sparkssnacks</span>
+                </div>
+            </div>
+
+            <a href="order.html" class="delivery-badge" style="text-decoration: none; cursor: pointer;">
+                <span class="delivery-icon">🛵</span>
+                <span>ORDER NOW</span>
+            </a>
+        </div>
+
+        <div class="right-section">
+            <div class="pancake-image" style="background-image: url('https://images.pexels.com/photos/718739/pexels-photo-718739.jpeg?auto=compress&cs=tinysrgb&w=600'); background-size: cover; background-position: center;"></div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sparks Snack Bar - Place Order</title>
+    <style>
+        :root {
+            --primary: #ff7536;
+            --primary-dark: #c32f09;
+            --primary-light: #ff9a1f;
+            --error: #e74c3c;
+            --success: #2ecc71;
+            --text: #2d3436;
+            --light-bg: #fff9f5;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --border-radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 50%, var(--primary-light) 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            color: var(--text);
+            line-height: 1.6;
+            animation: gradientShift 15s ease infinite;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background: linear-gradient(135deg, #ff7536 0%, #c32f09 50%, #ff6b1f 100%); }
+            50% { background: linear-gradient(135deg, #ff8547 0%, #d63f1a 50%, #ff7a2f 100%); }
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: var(--border-radius);
+            padding: 50px 40px;
+            box-shadow: var(--shadow);
+            position: relative;
+            z-index: 1;
+            animation: slideUp 0.8s ease-out;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff6f00 0%, #ff8c00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff6f00 0%, #ff8c00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff6f00 0%, #ff8c00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #ff6f00;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group.success input,
+        .form-group.success textarea,
+        .form-group.success select {
+            border-color: var(--success);
+        }
+
+        .form-group.error input,
+        .form-group.error textarea,
+        .form-group.error select {
+            border-color: var(--error);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group.error .error-message {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .char-count {
+            position: absolute;
+            right: 10px;
+            bottom: -20px;
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .char-count.warning {
+            color: #f39c12;
+        }
+
+        .char-count.error {
+            color: var(--error);
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05) inset;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 117, 54, 0.2);
+            background-color: #fff;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .menu-items {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .menu-item-group {
+            margin-bottom: 25px;
+        }
+
+        .menu-item-group-title {
+            font-weight: bold;
+            color: #ff6f00;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .menu-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .item-price {
+            color: #ff6f00;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .item-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+        }
+        
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+        
+        .item-qty {
+            width: 60px;
+            text-align: center;
+            padding: 8px 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            -webkit-appearance: textfield;
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+        
+        .item-qty::-webkit-outer-spin-button,
+        .item-qty::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        .quantity-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .quantity-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+        
+        .quantity-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .item-input input {
+            width: 60px;
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .quantity-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 15px;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .quantity-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.1);
+        }
+
+        .quantity-btn:active {
+            transform: scale(0.95);
+        }
+
+        .order-summary {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 35px 0;
+            border: 1px solid #f0f0f0;
+            transition: var(--transition);
+        }
+
+        .order-summary:hover {
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            border-color: rgba(255, 117, 54, 0.2);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            color: var(--primary);
+            padding-top: 15px;
+            margin-top: 10px;
+            border-top: 2px solid #eee;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            padding: 16px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(255, 117, 54, 0.3);
+        }
+
+        .btn-submit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-submit:hover::before {
+            left: 100%;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255, 111, 0, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .btn-submit:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-submit.loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin: -8px 0 0 -8px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-cancel {
+            background: #ddd;
+            color: #333;
+        }
+
+        .btn-cancel:hover {
+            background: #ccc;
+        }
+
+        .nav-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(255, 179, 77, 0.4);
+            transition: var(--transition);
+            z-index: 100;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(255, 179, 77, 0.6);
+        }
+
+        .nav-button.back {
+            left: 20px;
+            right: auto;
+            background: #fff;
+            color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-button.back:hover {
+            background: #f8f8f8;
+            color: var(--primary-dark);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .title {
+                font-size: 24px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .menu-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .item-input {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="nav-button back">← Back to Menu</a>
+    <a href="index.html" class="nav-button">🏠 Home</a>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">sparks</div>
+            <div class="title">Place Your Order</div>
+            <div class="subtitle">Select items and provide your details below</div>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            ✓ ORDER PLACED SUCCESSFULLY
+        </div>
+
+        <form id="orderForm">
+            <!-- Menu Items Section -->
+            <div class="form-section">
+                <div class="section-title">📋 Select Items</div>
+                
+                <div class="menu-items">
+                    <!-- Dry Pancakes -->
+                    <div class="menu-item-group">
+                        <div class="menu-item-group-title">Dry Pancakes</div>
+                        
+                        <div class="menu-item">
+                            <div class="item-info">
+                                <div class="item-name">Treasure Mix (Small)</div>
+                                <div class="item-price">₵30</div>
+                            </div>
+                            <div class="item-input">
+                                <input type="number" name="treasure_mix" min="0" value="0" class="item-qty">
+                                <span class="quantity-label">qty</span>
+                                <div class="quantity-controls">
+                                    <button class="quantity-btn">+</button>
+                                    <button class="quantity-btn">-</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="menu-item">
+                            <div class="item-info">
+                                <div class="item-name">Marvel Mix (Medium)</div>
+                                <div class="item-price">₵50</div>
+                            </div>
+                            <div class="item-input">
+                                <input type="number" name="marvel_mix" min="0" value="0" class="item-qty">
+                                <span class="quantity-label">qty</span>
+                                <div class="quantity-controls">
+                                    <button class="quantity-btn">+</button>
+                                    <button class="quantity-btn">-</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="menu-item">
+                            <div class="item-info">
+                                <div class="item-name">Glorious Mix (Large)</div>
+                                <div class="item-price">₵70</div>
+                            </div>
+                            <div class="item-input">
+                                <input type="number" name="glorious_mix" min="0" value="0" class="item-qty">
+                                <span class="quantity-label">qty</span>
+                                <div class="quantity-controls">
+                                    <button class="quantity-btn">+</button>
+                                    <button class="quantity-btn">-</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fluffy Mini Pancakes -->
+                    <div class="menu-item-group">
+                        <div class="menu-item-group-title">Fluffy Mini Pancakes</div>
+                        
+                        <div class="menu-item" role="listitem">
+                            <div class="item-info">
+                                <div class="item-name">Mini Fluff Frenzy (10 pcs)</div>
+                                <div class="item-price" aria-label="Price: 30 Ghana cedis">₵30</div>
+                            </div>
+                            <div class="item-input">
+                                <label for="mini_fluff" class="sr-only">Mini Fluff Frenzy quantity</label>
+                                <input 
+                                    type="number" 
+                                    id="mini_fluff"
+                                    name="mini_fluff" 
+                                    min="0" 
+                                    value="0" 
+                                    class="item-qty"
+                                    aria-label="Mini Fluff Frenzy quantity"
+                                    onchange="updateTotal()"
+                                >
+                                <span class="quantity-label" aria-hidden="true">qty</span>
+                                <div class="quantity-controls">
+                                    <button type="button" class="quantity-btn" 
+                                        onclick="this.parentNode.previousElementSibling.stepUp(); updateTotal()"
+                                        aria-label="Increase quantity">
+                                        <span aria-hidden="true">+</span>
+                                    </button>
+                                    <button type="button" class="quantity-btn" 
+                                        onclick="this.parentNode.previousElementSibling.stepDown(); updateTotal()"
+                                        aria-label="Decrease quantity">
+                                        <span aria-hidden="true">-</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="menu-item" role="listitem">
+                            <div class="item-info">
+                                <div class="item-name">Double Delight Bites (20 pcs)</div>
+                                <div class="item-price" aria-label="Price: 40 Ghana cedis">₵40</div>
+                            </div>
+                            <div class="item-input">
+                                <label for="double_delight" class="sr-only">Double Delight Bites quantity</label>
+                                <input 
+                                    type="number" 
+                                    id="double_delight"
+                                    name="double_delight" 
+                                    min="0" 
+                                    value="0" 
+                                    class="item-qty"
+                                    aria-label="Double Delight Bites quantity"
+                                    onchange="updateTotal()"
+                                >
+                                <span class="quantity-label" aria-hidden="true">qty</span>
+                                <div class="quantity-controls">
+                                    <button type="button" class="quantity-btn" 
+                                        onclick="this.parentNode.previousElementSibling.stepUp(); updateTotal()"
+                                        aria-label="Increase quantity">
+                                        <span aria-hidden="true">+</span>
+                                    </button>
+                                    <button type="button" class="quantity-btn" 
+                                        onclick="this.parentNode.previousElementSibling.stepDown(); updateTotal()"
+                                        aria-label="Decrease quantity">
+                                        <span aria-hidden="true">-</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="menu-item" role="listitem">
+                            <div class="item-info">
+                                <div class="item-name">Fluff Frenzy Feast (30 pcs)</div>
+                                <div class="item-price" aria-label="Price: 50 Ghana cedis">₵50</div>
+                            </div>
+                            <div class="item-input">
+                                <label for="fluff_feast" class="sr-only">Fluff Frenzy Feast quantity</label>
+                                <input 
+                                    type="number" 
+                                    id="fluff_feast" 
+                                    name="fluff_feast" 
+                                    min="0" 
+                                    value="0" 
+                                    class="item-qty"
+                                    aria-label="Fluff Frenzy Feast quantity"
+                                    onchange="updateTotal()"
+                                >
+                                <span class="quantity-label" aria-hidden="true">qty</span>
+                                <div class="quantity-controls">
+                                    <button type="button" class="quantity-btn" 
+                                        onclick="this.parentNode.previousElementSibling.stepUp(); updateTotal()"
+                                        aria-label="Increase quantity">
+                                        <span aria-hidden="true">+</span>
+                                    </button>
+                                    <button type="button" class="quantity-btn" 
+                                        onclick="this.parentNode.previousElementSibling.previousElementSibling.stepDown(); updateTotal()"
+                                        aria-label="Decrease quantity">
+                                        <span aria-hidden="true">-</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Extras -->
+                    <div class="menu-item-group">
+                        <div class="menu-item-group-title">Extras</div>
+                        
+                        <div class="menu-item" role="listitem">
+                            <div class="item-info">
+                                <div class="item-name">Syrup (Per Cup)</div>
+                                <div class="item-price" aria-label="Price: 10 Ghana cedis">₵10</div>
+                            </div>
+                            <div class="item-input">
+                                <label for="syrup" class="sr-only">Syrup cups quantity</label>
+                                <input 
+                                    type="number" 
+                                    id="syrup"
+                                    name="syrup" 
+                                    min="0" 
+                                    value="0" 
+                                    class="item-qty"
+                                    aria-label="Number of syrup cups"
+                                    onchange="updateTotal()"
+                                >
+                                <span class="quantity-label" aria-hidden="true">qty</span>
+                                <div class="quantity-controls">
+                                    <button type="button" class="quantity-btn" 
+                                        onclick="this.parentNode.previousElementSibling.stepUp(); updateTotal()"
+                                        aria-label="Increase quantity">
+                                        <span aria-hidden="true">+</span>
+                                    </button>
+                                    <button type="button" class="quantity-btn" 
+                                        onclick="this.parentNode.previousElementSibling.stepDown(); updateTotal()"
+                                        aria-label="Decrease quantity">
+                                        <span aria-hidden="true">-</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">₵0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery Fee:</span>
+                    <span id="deliveryFee">₵5</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <span id="total">₵5</span>
+                </div>
+            </div>
+
+            <!-- Customer Details Section -->
+            <div class="form-section">
+                <div class="section-title">👤 Your Details</div>
+
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email (Optional)</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email">
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Delivery Address *</label>
+                    <textarea id="address" name="address" required placeholder="Enter your delivery address"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Special Instructions (Optional)</label>
+                    <textarea id="notes" name="notes" placeholder="Any special requests or instructions?"></textarea>
+                    <div class="char-count">200 characters remaining</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="delivery">Delivery Option *</label>
+                    <select id="delivery" name="delivery" required>
+                        <option value="">Select delivery option</option>
+                        <option value="home">Home Delivery (₵5)</option>
+                        <option value="pickup">Pickup (Free)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="button-group">
+                <button type="button" class="btn btn-cancel" onclick="resetForm()">Clear Form</button>
+                <button type="submit" class="btn btn-submit" id="submit-btn">Place Order</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Preload Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Chewy&display=swap" rel="stylesheet">
+
+    <script>
+        // Form validation and submission
+        const menuItems = {
+            treasure_mix: 30,
+            marvel_mix: 50,
+            glorious_mix: 70,
+            mini_fluff: 30,
+            double_delight: 40,
+            fluff_feast: 50,
+            syrup: 10
+        };
+
+        const form = document.getElementById('orderForm');
+        const quantityInputs = document.querySelectorAll('.item-qty');
+        const deliverySelect = document.getElementById('delivery');
+        const successMessage = document.getElementById('successMessage');
+
+        // Update total when quantities change
+        quantityInputs.forEach(input => {
+            input.addEventListener('change', updateTotal);
+        });
+
+        deliverySelect.addEventListener('change', updateTotal);
+
+        function updateTotal() {
+            let subtotal = 0;
+
+            quantityInputs.forEach(input => {
+                const itemName = input.name;
+                const quantity = parseInt(input.value) || 0;
+                const price = menuItems[itemName];
+                subtotal += quantity * price;
+            });
+
+            let deliveryFee = 0;
+            if (deliverySelect.value === 'home') {
+                deliveryFee = 5;
+            }
+
+            const total = subtotal + deliveryFee;
+
+            document.getElementById('subtotal').textContent = '₵' + subtotal;
+            document.getElementById('deliveryFee').textContent = '₵' + deliveryFee;
+            document.getElementById('total').textContent = '₵' + total;
+        }
+
+        function resetForm() {
+            form.reset();
+            quantityInputs.forEach(input => input.value = 0);
+            deliverySelect.value = '';
+            updateTotal();
+            successMessage.style.display = 'none';
+        }
+
+        // Form validation
+        function validateForm() {
+            let isValid = true;
+            const nameInput = document.getElementById('name');
+            const phoneInput = document.getElementById('phone');
+            const emailInput = document.getElementById('email');
+            const addressInput = document.getElementById('address');
+            
+            // Reset all error states
+            document.querySelectorAll('.form-group').forEach(group => {
+                group.classList.remove('error');
+            });
+
+            // Validate name
+            if (!nameInput.value.trim()) {
+                showError(nameInput, 'Please enter your name');
+                isValid = false;
+            }
+
+            // Validate phone
+            const phoneRegex = /^[0-9\-\+\(\)\s]{10,20}$/;
+            if (!phoneRegex.test(phoneInput.value)) {
+                showError(phoneInput, 'Please enter a valid phone number');
+                isValid = false;
+            }
+
+            // Format phone number as user types
+            phoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 10) value = value.substring(0, 10);
+                if (value.length > 6) {
+                    value = value.substring(0, 3) + '-' + value.substring(3, 6) + '-' + value.substring(6);
+                } else if (value.length > 3) {
+                    value = value.substring(0, 3) + '-' + value.substring(3);
+                }
+                e.target.value = value;
+            });
+
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput.value)) {
+                showError(emailInput, 'Please enter a valid email address');
+                isValid = false;
+            }
+
+            // Validate address
+            if (!addressInput.value.trim()) {
+                showError(addressInput, 'Please enter your delivery address');
+                isValid = false;
+            }
+
+            // Validate at least one item is selected
+            let hasItems = false;
+            document.querySelectorAll('.quantity').forEach(input => {
+                if (parseInt(input.value) > 0) hasItems = true;
+            });
+
+            if (!hasItems) {
+                alert('Please select at least one item');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function showError(input, message) {
+            const formGroup = input.closest('.form-group');
+            formGroup.classList.add('error');
+            
+            let errorElement = formGroup.querySelector('.error-message');
+            if (!errorElement) {
+                errorElement = document.createElement('div');
+                errorElement.className = 'error-message';
+                formGroup.appendChild(errorElement);
+            }
+            errorElement.textContent = message;
+            
+            // Scroll to first error
+            if (document.querySelectorAll('.error').length === 1) {
+                input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // Character counter for textarea
+        function setupCharCounter(textarea, maxLength) {
+            const counter = document.createElement('div');
+            counter.className = 'char-count';
+            textarea.parentNode.insertBefore(counter, textarea.nextSibling);
+            
+            function updateCounter() {
+                const remaining = maxLength - textarea.value.length;
+                counter.textContent = `${remaining} characters remaining`;
+                
+                if (remaining < 0) {
+                    counter.classList.add('error');
+                    counter.classList.remove('warning');
+                } else if (remaining < 20) {
+                    counter.classList.add('warning');
+                    counter.classList.remove('error');
+                } else {
+                    counter.className = 'char-count';
+                }
+            }
+            
+            textarea.addEventListener('input', updateCounter);
+            updateCounter();
+        }
+
+        // Initialize quantity controls and character counter
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize character counter for notes
+            const notesTextarea = document.getElementById('notes');
+            if (notesTextarea) {
+                setupCharCounter(notesTextarea, 200);
+            }
+
+            // Initialize quantity controls
+            document.querySelectorAll('.quantity-controls').forEach(control => {
+                const input = control.closest('.item-input').querySelector('.item-qty');
+                const plusBtn = control.querySelector('button:first-child');
+                const minusBtn = control.querySelector('button:last-child');
+                
+                // Handle plus button
+                plusBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const currentValue = parseInt(input.value) || 0;
+                    input.value = currentValue + 1;
+                    input.dispatchEvent(new Event('change'));
+                    updateTotal();
+                });
+                
+                // Handle minus button
+                minusBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const currentValue = parseInt(input.value) || 0;
+                    if (currentValue > 0) {
+                        input.value = currentValue - 1;
+                        input.dispatchEvent(new Event('change'));
+                        updateTotal();
+                    }
+                });
+                
+                // Ensure input stays valid
+                input.addEventListener('input', function() {
+                    if (this.value < 0) this.value = 0;
+                    updateTotal();
+                });
+            });
+            
+            // Initialize total on page load
+            updateTotal();
+        });
+
+        // Form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) return;
+
+            const submitBtn = document.getElementById('submit-btn');
+            const originalBtnText = submitBtn.innerHTML;
+            
+            try {
+                // Show loading state
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="btn-loader"></span> Processing...';
+                submitBtn.classList.add('loading');
+
+                // Get form data
+                const formData = new FormData(form);
+                const selectedItems = [];
+                
+                document.querySelectorAll('.menu-item').forEach(item => {
+                    const quantity = parseInt(item.querySelector('.quantity').value);
+                    if (quantity > 0) {
+                        const name = item.querySelector('.item-name').textContent;
+                        const price = parseFloat(item.querySelector('.item-price').textContent.replace('$', ''));
+                        selectedItems.push({ name, quantity, price });
+                    }
+                });
+
+                const orderData = {
+                    customer: {
+                        name: formData.get('name'),
+                        phone: formData.get('phone'),
+                        email: formData.get('email'),
+                        address: formData.get('address'),
+                        notes: formData.get('notes')
+                    },
+                    items: selectedItems,
+                    total: parseFloat(document.getElementById('total').textContent.replace('$', '')),
+                    timestamp: new Date().toISOString()
+                };
+
+                // Log to console (replace with actual API call)
+                console.log('Order Data:', orderData);
+
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                // Show success message
+                const successMessage = document.createElement('div');
+                successMessage.className = 'success-message show';
+                successMessage.innerHTML = `
+                    <h3>🎉 Order Placed Successfully!</h3>
+                    <p>Thank you for your order. We've sent a confirmation to ${orderData.customer.email}.</p>
+                    <p>Order Total: <strong>$${orderData.total.toFixed(2)}</strong></p>
+                    <p>We'll contact you shortly to confirm your order.</p>
+                `;
+                
+                const formContainer = document.querySelector('.container');
+                formContainer.insertBefore(successMessage, form);
+                
+                // Scroll to success message
+                successMessage.scrollIntoView({ behavior: 'smooth' });
+                
+                // Reset form after delay
+                setTimeout(() => {
+                    resetForm();
+                    successMessage.remove();
+                }, 5000);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('There was an error processing your order. Please try again.');
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.classList.remove('loading');
+            }
+        });
+
+
+        // Initialize total on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTotal();
+            
+            // Add animation to form elements
+            const formElements = document.querySelectorAll('.form-group, .menu-item, .section-title');
+            formElements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, 100 + (index * 50));
+            });
+        });
+    </script>
+</body>
+</html>
