@@ -1,774 +1,453 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Menu - Tasty Pancakes | Sparks Snack Bar</title>
-    <meta name="description" content="Explore our delicious pancake menu. From classic buttermilk to speciality pancakes, we have something for everyone at Sparks Snack Bar.">
+    <meta name="description" content="Explore our delicious pancake menu. From classic buttermilk to speciality pancakes, we have something for everyone at Sparks Snack Bar." />
     <meta name="theme-color" content="#ff7536">
-    <!-- Preload critical resources -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Chewy&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="css/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+    <!-- Fonts & perf -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Chewy&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/styles.css" media="print" onload="this.media='all'">
     <noscript>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Chewy&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="css/styles.css">
+        <link href="css/styles.css" rel="stylesheet">
     </noscript>
+
     <style>
         :root {
             --primary: #ff7536;
             --primary-dark: #c32f09;
             --primary-light: #ff9a1f;
             --text: #2d3436;
-            --light-bg: #fff9f5;
+            --muted: #666;
             --white: #ffffff;
+            --bg-gradient-from: #ff7536;
+            --bg-gradient-to: #ff6b1f;
             --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            --border-radius: 16px;
+            --transition: 0.28s cubic-bezier(.25,.8,.25,1);
+            --radius: 14px;
+            --max-width: 1280px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
+        /* Reset & base */
+        *, *::before, *::after { box-sizing: border-box; }
+        html { scroll-behavior: smooth; font-size: 16px; }
         body {
-            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 50%, var(--primary-light) 100%);
-            min-height: 100vh;
-            padding: 20px;
-            position: relative;
+            margin: 0;
+            font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
             color: var(--text);
-            line-height: 1.6;
-            animation: gradientShift 15s ease infinite;
+            background: linear-gradient(135deg, var(--bg-gradient-from) 0%, var(--primary-dark) 50%, var(--bg-gradient-to) 100%);
+            min-height: 100vh;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            padding: 24px;
+            position: relative;
+            line-height: 1.5;
         }
 
-        @keyframes gradientShift {
-            0%, 100% { background: linear-gradient(135deg, #ff7536 0%, #c32f09 50%, #ff6b1f 100%); }
-            50% { background: linear-gradient(135deg, #ff8547 0%, #d63f1a 50%, #ff7a2f 100%); }
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+        /* Subtle animated overlay */
+        body::before{
+            content: "";
+            position: fixed; inset: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.05), transparent 25%),
+                        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.03), transparent 25%);
             pointer-events: none;
             z-index: 0;
         }
 
+        /* Accessibility skip link */
         .skip-link {
             position: absolute;
-            top: -40px;
-            left: 0;
+            left: 12px;
+            top: -48px;
             background: var(--primary);
-            color: white;
-            padding: 8px 16px;
-            z-index: 100;
-            transition: top 0.3s;
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 8px;
+            z-index: 9999;
+            transition: top 0.18s ease;
+            text-decoration: none;
         }
+        .skip-link:focus { top: 12px; outline: 3px solid #fff9; }
 
-        .skip-link:focus {
-            top: 0;
-        }
-
-        .container {
-            display: flex;
-            max-width: 1280px;
+        .page {
+            max-width: var(--max-width);
             margin: 0 auto;
-            gap: 40px;
-            align-items: flex-start;
             position: relative;
             z-index: 1;
-            padding: 20px 0;
         }
 
-        .left-section {
-            flex: 1;
-            background: var(--white);
-            border-radius: var(--border-radius);
-            padding: 50px 40px;
+        header.site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .brand .logo {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #fff8f0, #fff2ea);
+            display: grid;
+            place-items: center;
+            font-family: 'Chewy', cursive;
+            font-size: 28px;
+            color: var(--primary);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .brand h1 {
+            font-size: 1.25rem;
+            color: #fff;
+            margin: 0;
+            letter-spacing: 0.6px;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .nav-button {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            color: #fff;
+            border: 0;
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 8px 25px rgba(255,179,77,0.25);
+            transition: transform var(--transition), box-shadow var(--transition);
+        }
+        .nav-button:hover { transform: translateY(-3px); }
+        .nav-button:focus { outline: 3px solid rgba(255,255,255,0.2); }
+
+        main.container {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 32px;
+            align-items: start;
+        }
+
+        /* Left card */
+        .left-card {
+            background: rgba(255,255,255,0.98);
+            border-radius: var(--radius);
+            padding: 32px;
             box-shadow: var(--shadow);
             position: relative;
-            animation: slideInLeft 0.8s ease-out;
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: var(--transition);
-        }
-
-        .left-section:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-        }
-
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            overflow: visible;
         }
 
         .menu-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            color: var(--white);
-            padding: 15px 30px;
-            border-radius: 12px;
-            font-size: 2.2rem;
-            font-weight: 800;
-            font-family: 'Chewy', cursive;
-            letter-spacing: 2px;
-            margin: 0 0 40px 0;
             display: inline-block;
-            box-shadow: 0 8px 20px rgba(255, 117, 54, 0.3);
-            animation: slideDown 0.6s ease-out;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-family: 'Chewy', cursive;
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--white);
+            box-shadow: 0 8px 20px rgba(255,117,54,0.14);
+            margin-bottom: 18px;
             text-transform: uppercase;
-            position: relative;
-            overflow: hidden;
-            transition: var(--transition);
-        }
-
-        .menu-header::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transform: translateX(-100%);
-            transition: 0.5s;
-        }
-
-        .menu-header:hover::after {
-            transform: translateX(100%);
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Navigation Button */
-        .nav-button {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
-            color: white;
-            border: none;
-            padding: 12px 28px;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 8px 25px rgba(255, 179, 77, 0.4);
-            transition: var(--transition);
-            z-index: 100;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-button:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 12px 40px rgba(255, 179, 77, 0.6);
-        }
-
-        .logo-top {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            text-align: center;
-            transition: var(--transition);
-        }
-
-        .logo-top:hover {
-            transform: rotate(5deg) scale(1.05);
-        }
-
-        .logo-text {
-            font-size: 48px;
-            font-weight: bold;
-            color: #ff6f00;
-            letter-spacing: 2px;
-        }
-
-        .logo-subtitle {
-            font-size: 12px;
-            color: #ff6f00;
             letter-spacing: 1px;
         }
 
-        .menu-category {
-            margin: 50px 0 20px;
-            position: relative;
+        .menu-section {
+            margin-top: 22px;
         }
 
-        .menu-category h2 {
+        .menu-section h2 {
             font-family: 'Chewy', cursive;
             color: var(--primary);
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            position: relative;
-            display: inline-block;
-            padding-bottom: 10px;
+            font-size: 1.15rem;
+            margin: 0 0 12px 0;
         }
 
-        .menu-category h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--primary-light));
-            border-radius: 3px;
+        ul.menu-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            gap: 12px;
         }
 
         .menu-item {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 20px;
-            padding: 20px;
-            background: white;
+            gap: 14px;
+            padding: 14px;
+            background: #fff;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            transition: transform var(--transition), box-shadow var(--transition);
             position: relative;
             overflow: hidden;
-            width: 100%;
-            box-sizing: border-box;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
 
         .menu-item::before {
-            content: '';
+            content: "";
             position: absolute;
-            top: 10px; /* Add top and bottom spacing */
+            top: 10px;
             left: 0;
-            width: 5px;
-            height: calc(100% - 20px); /* Adjust height to account for top/bottom spacing */
+            height: calc(100% - 20px);
+            width: 6px;
             background: linear-gradient(to bottom, var(--primary), var(--primary-light));
-            transition: var(--transition);
-            border-radius: 0 3px 3px 0; /* Add rounded corners to the left edge */
+            border-radius: 0 4px 4px 0;
+            transition: width 0.25s ease;
         }
 
         .menu-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            border-color: rgba(255, 117, 54, 0.2);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
         }
-
-        .menu-item:hover::before {
-            width: 8px;
-        }
+        .menu-item:hover::before { width: 10px; }
 
         .item-info {
-            flex: 1;
-            padding-right: 15px;
-            min-width: 0; /* Prevents flex item from overflowing */
-            position: relative;
-            margin-left: 5px; /* Add a small margin to prevent text from touching the syrup */
+            min-width: 0;
+            padding-left: 10px;
         }
 
-        .item-info h3 {
-            font-size: 1.3rem;
-            color: var(--text);
-            margin-bottom: 8px;
+        .item-title {
             font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text);
             display: flex;
             align-items: center;
+            gap: 8px;
         }
 
-        .item-info h3 .veg-indicator {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #4caf50;
-            margin-right: 10px;
-            position: relative;
-        }
-
-        .item-info h3 .veg-indicator::before {
-            content: '';
-            position: absolute;
-            top: 4px;
-            left: 4px;
-            width: 8px;
-            height: 8px;
-            background: white;
-            border-radius: 50%;
-        }
-
-        .item-info p {
-            color: #555;
-            font-size: 1rem;
-            line-height: 1.7;
-            margin: 8px 0 15px;
-            font-weight: 400;
-            position: relative;
-            padding-left: 15px;
-        }
-        
-        .item-info p::before {
-            content: '•';
-            color: var(--primary);
-            position: absolute;
-            left: 0;
-            top: 0;
-            font-size: 1.2em;
-            line-height: 1.4;
+        .item-desc {
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 0.95rem;
         }
 
         .item-price {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 800;
             color: var(--primary);
-            transition: all 0.3s ease;
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            margin: 15px 0 5px;
-            padding: 8px 18px;
-            background: linear-gradient(135deg, rgba(255, 179, 77, 0.1), rgba(255, 117, 54, 0.1));
-            border-radius: 50px;
-            box-shadow: 0 4px 15px rgba(255, 117, 54, 0.1);
-            border: 1px solid rgba(255, 117, 54, 0.15);
-        }
-        
-        .item-price::before {
-            content: '₵';
-            font-size: 0.9em;
-            margin-right: 3px;
-            opacity: 0.9;
-        }
-        
-        .menu-item:hover .item-price {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 117, 54, 0.15);
-            background: linear-gradient(135deg, rgba(255, 179, 77, 0.15), rgba(255, 117, 54, 0.15));
+            background: linear-gradient(135deg, rgba(255,179,77,0.06), rgba(255,117,54,0.05));
+            padding: 10px 14px;
+            border-radius: 999px;
+            height: fit-content;
         }
 
-        .item-price::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 10px;
-            width: 30px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--primary-light));
-            border-radius: 3px;
-            transition: var(--transition);
-        }
-
-        .menu-item:hover .item-price::after {
-            width: 100%;
-            left: 0;
-        }
-
+        /* Syrup badge */
         .syrup-badge {
             position: absolute;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 160px;
-            height: 160px;
-            background: linear-gradient(135deg, #ffeb3b 0%, #ffd54f 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            box-shadow: 0 15px 40px rgba(255, 235, 59, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.3);
+            right: 20px;
+            top: -36px;
+            background: linear-gradient(135deg,#ffeb3b,#ffd54f);
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: 0 12px 30px rgba(255,235,59,0.18);
             font-weight: 800;
-            font-size: 18px;
-            z-index: 5;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: translateX(-50%) scale(1); }
-            50% { transform: translateX(-50%) scale(1.05); }
-        }
-
-        .contact-section {
-            display: flex;
-            gap: 30px;
-            margin-top: 50px;
-            padding-top: 30px;
-            border-top: 2px solid #eee;
-        }
-
-        .contact-item {
-            display: flex;
+            color: #5a3a00;
+            display: inline-flex;
             align-items: center;
-            gap: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
+            gap: 8px;
+            z-index: 2;
         }
 
-        .contact-icon {
-            font-size: 24px;
+        /* Contact & order */
+        .contact-row {
+            display:flex;
+            gap: 18px;
+            margin-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.04);
+            padding-top: 18px;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
-        .delivery-badge {
-            position: absolute;
-            bottom: 20px;
-            right: 30px;
-            background: #ff6f00;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 16px;
-            display: flex;
+        .contact-item { display:flex; gap:8px; align-items:center; color:var(--muted); font-weight:600; }
+
+        .order-now {
+            margin-left: auto;
+            text-decoration: none;
+            background: var(--primary);
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 999px;
+            font-weight: 800;
+            display: inline-flex;
             align-items: center;
             gap: 10px;
         }
 
-        .delivery-icon {
-            font-size: 28px;
+        /* Right panel */
+        .right-card {
+            position: sticky;
+            top: 22px;
+            align-self: start;
         }
 
-        .right-section {
-            flex: 1;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .pancake-image {
-            width: 100%;
-            height: 600px;
+        .pancake-figure {
             background: linear-gradient(135deg, #ffd89b 0%, #fff 100%);
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: #999;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
             overflow: hidden;
+            display: block;
         }
 
+        .pancake-figure img {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 600px;
+            object-fit: cover;
+        }
+
+        /* Responsive */
         @media (max-width: 1024px) {
-            .container {
-                flex-direction: column;
-                padding: 10px;
-            }
-            
-            .left-section {
-                width: 100%;
-                padding: 25px 15px;
-                border-radius: 12px;
-            }
-            
-            .menu-header {
-                font-size: 1.5rem;
-                padding: 12px 15px;
-                margin: 0 0 20px 0;
-                width: calc(100% + 30px);
-                margin-left: -15px;
-                text-align: center;
-                border-radius: 0;
-            }
-            
-            .nav-button {
-                padding: 12px 20px;
-                font-size: 15px;
-                right: 10px;
-                top: 10px;
-                z-index: 1000;
-                min-width: 100px;
-            }
-            
-            .menu-category {
-                margin-bottom: 25px;
-            }
-            
-            .menu-item {
-                margin-bottom: 20px;
-                padding: 18px 12px;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            
-            .item-info {
-                width: 100%;
-                padding: 0;
-            }
-            
-            .item-info h3 {
-                font-size: 1.3rem;
-                margin-bottom: 8px;
-            }
-            
-            .item-info p {
-                font-size: 0.95rem;
-                line-height: 1.5;
-                margin-bottom: 12px;
-            }
-            
-            .item-price {
-                font-size: 1.3rem;
-                margin-top: 5px;
-            }
-            
-            .pancake-image {
-                height: 200px;
-                margin-top: 20px;
-                border-radius: 12px;
-            }
-
-            .section-title {
-                font-size: 28px;
-                margin: 20px 0 15px;
-                text-align: center;
-            }
-            
-            .contact-section {
-                flex-direction: column;
-                gap: 15px;
-                margin-top: 30px;
-                padding-top: 20px;
-            }
-            
-            .contact-item {
-                justify-content: center;
-                font-size: 15px;
-            }
+            main.container { grid-template-columns: 1fr; }
+            .right-card { position: relative; order: 2; }
+            .left-card { order: 1; }
+            .syrup-badge { top: auto; right: 20px; bottom: 12px; transform: none; }
         }
 
-        @media (max-width: 768px) {
-            .menu-header {
-                font-size: 1.8rem;
-                padding: 20px 15px;
-                margin: -25px -15px 25px -15px;
-                width: calc(100% + 30px);
-                border-radius: 0 0 12px 12px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                position: relative;
-                z-index: 10;
-            }
-            
-            .menu-category {
-                margin-bottom: 30px;
-            }
-            
-            .section-title {
-                font-size: 1.6rem;
-                margin: 30px 0 20px;
-                position: relative;
-                padding-bottom: 10px;
-            }
-            
-            .section-title::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 60px;
-                height: 3px;
-                background: linear-gradient(90deg, var(--primary), var(--primary-light));
-                border-radius: 3px;
-            }
-            
-            .menu-item {
-                flex-direction: column;
-                padding: 22px 18px;
-                margin-bottom: 20px;
-                width: 100%;
-                box-sizing: border-box;
-                background: #ffffff;
-                border-radius: 14px;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-                border: 1px solid rgba(0,0,0,0.04);
-                transition: all 0.25s ease;
-            }
-            
-            .menu-item:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            }
-            
-            .item-info h3 {
-                font-size: 1.35rem;
-                margin: 0 0 8px 0;
-                line-height: 1.3;
-                color: #222;
-                font-weight: 700;
-                letter-spacing: -0.3px;
-            }
-            
-            .item-info p {
-                font-size: 1rem;
-                line-height: 1.6;
-                margin: 0 0 14px 0;
-                color: #555;
-                font-weight: 400;
-            }
-            
-            .item-price {
-                font-size: 1.5rem;
-                font-weight: 800;
-                margin: 15px 0 0 0;
-                display: block;
-                width: 100%;
-                text-align: left;
-                color: var(--primary);
-                position: relative;
-                padding-top: 10px;
-            }
-            
-            .item-price::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 40px;
-                height: 2px;
-                background: linear-gradient(90deg, var(--primary), rgba(255,117,54,0.3));
-                border-radius: 2px;
-            }
-            
-            /* Add some spacing between items */
-            .menu-item + .menu-item {
-                margin-top: 5px;
-            }
-            
-            .item-info {
-                padding-right: 0;
-                margin-bottom: 15px;
-                width: 100%;
-            }
-            
-            .item-price {
-                align-self: flex-start;
-                font-size: 1.5rem;
-            }
+        @media (max-width: 520px) {
+            .brand h1 { font-size: 1rem; }
+            .menu-header { font-size: 1.25rem; }
+            .item-title { font-size: 1rem; }
+            .item-price { font-size: 1.05rem; padding: 8px 10px; }
         }
 
-            .left-section {
-                padding: 30px 20px;
-            }
-
-            .logo-top {
-                position: static;
-                margin-bottom: 20px;
-            }
-
-            .menu-header {
-                font-size: 20px;
-            }
-
-            .section-title {
-                font-size: 24px;
-            }
-
-            .contact-section {
-                flex-direction: column;
-                gap: 10px;
-            }
+        /* Focus styles for keyboard users */
+        a:focus, button:focus {
+            outline: 3px solid rgba(255,255,255,0.18);
+            outline-offset: 2px;
         }
     </style>
 </head>
 <body>
-    <a href="index.html" class="nav-button">🏠 Home</a>
+    <a class="skip-link" href="#main">Skip to content</a>
 
-    <div class="container">
-        <div class="left-section">
-            <div class="logo-top">
-                <div class="logo-text">S</div>
-            </div>
-
-            <div class="menu-header">MENU</div>
-
-            <div class="menu-section">
-                <h2 class="section-title">Dry Pancakes</h2>
-                
-                <div class="menu-item">
-                    <div class="item-name">TREASURE MIX<br>(SMALL)</div>
-                    <div class="item-price">₵30</div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="item-name">MARVEL MIX<br>(MEDIUM)</div>
-                    <div class="item-price">₵50</div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="item-name">GLORIOUS MIX<br>(LARGE)</div>
-                    <div class="item-price">₵70</div>
-                </div>
-            </div>
-
-            <div class="menu-section">
-                <h2 class="section-title">Fluffy Mini<br>Pancakes</h2>
-                
-                <div class="menu-item">
-                    <div class="item-name">MINI FLUFF FRENZY<br>(10 PIECES)</div>
-                    <div class="item-price">₵30</div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="item-name">DOUBLE DELIGHT BITES<br>(20 PIECES)</div>
-                    <div class="item-price">₵40</div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="item-name">FLUFF FRENZY FEAST<br>(30 PIECES)</div>
-                    <div class="item-price">₵50</div>
-                </div>
-            </div>
-
-            <div class="syrup-badge">
-                <div>SYRUP<br>₵10<br>PER CUP</div>
-            </div>
-
-            <div class="contact-section">
-                <div class="contact-item">
-                    <span class="contact-icon">💬</span>
-                    <span>0538293775</span>
-                </div>
-                <div class="contact-item">
-                    <span class="contact-icon">📷</span>
-                    <span>sparkssnacks</span>
-                </div>
-            </div>
-
-            <a href="order.html" class="delivery-badge" style="text-decoration: none; cursor: pointer;">
-                <span class="delivery-icon">🛵</span>
-                <span>ORDER NOW</span>
+    <div class="page">
+        <header class="site-header" role="banner">
+            <a class="brand" href="index.html" aria-label="Sparks Snack Bar homepage">
+                <div class="logo" aria-hidden="true">S</div>
+                <h1>Sparks Snack Bar</h1>
             </a>
-        </div>
 
-        <div class="right-section">
-            <div class="pancake-image" style="background-image: url('https://images.pexels.com/photos/718739/pexels-photo-718739.jpeg?auto=compress&cs=tinysrgb&w=600'); background-size: cover; background-position: center;"></div>
-        </div>
+            <div class="nav-actions" role="navigation" aria-label="Main actions">
+                <a class="nav-button" href="index.html">🏠 Home</a>
+                <a class="nav-button" href="order.html">🛵 Order</a>
+            </div>
+        </header>
+
+        <main id="main" class="container" role="main" aria-labelledby="menu-title">
+            <section class="left-card" aria-labelledby="menu-title">
+                <div class="menu-header" id="menu-title">MENU</div>
+
+                <div class="menu-section" aria-labelledby="dry-pancakes-title">
+                    <h2 id="dry-pancakes-title">Dry Pancakes</h2>
+                    <ul class="menu-list" aria-label="Dry Pancakes menu">
+                        <li class="menu-item">
+                            <div class="item-info">
+                                <div class="item-title">TREASURE MIX <span aria-hidden="true" style="font-weight:600; font-size:0.85rem; opacity:0.85; margin-left:6px;">(SMALL)</span></div>
+                                <div class="item-desc">A delightful combo of flavours in a compact serving.</div>
+                            </div>
+                            <div class="item-price" aria-hidden="false" aria-label="Price thirty cedis">₵30</div>
+                        </li>
+
+                        <li class="menu-item">
+                            <div class="item-info">
+                                <div class="item-title">MARVEL MIX <span style="font-weight:600; font-size:0.85rem; opacity:0.85; margin-left:6px;">(MEDIUM)</span></div>
+                                <div class="item-desc">Perfect for sharing or a hearty solo treat.</div>
+                            </div>
+                            <div class="item-price" aria-label="Price fifty cedis">₵50</div>
+                        </li>
+
+                        <li class="menu-item">
+                            <div class="item-info">
+                                <div class="item-title">GLORIOUS MIX <span style="font-weight:600; font-size:0.85rem; opacity:0.85; margin-left:6px;">(LARGE)</span></div>
+                                <div class="item-desc">Go big with our favourite toppings and extras.</div>
+                            </div>
+                            <div class="item-price" aria-label="Price seventy cedis">₵70</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="menu-section" aria-labelledby="fluffy-mini-title">
+                    <h2 id="fluffy-mini-title">Fluffy Mini Pancakes</h2>
+                    <ul class="menu-list" aria-label="Fluffy Mini Pancakes menu">
+                        <li class="menu-item">
+                            <div class="item-info">
+                                <div class="item-title">MINI FLUFF FRENZY <span style="font-weight:600; font-size:0.85rem; opacity:0.85; margin-left:6px;">(10 PIECES)</span></div>
+                                <div class="item-desc">Tiny, pillowy pancakes — perfect bite-sized happiness.</div>
+                            </div>
+                            <div class="item-price" aria-label="Price thirty cedis">₵30</div>
+                        </li>
+
+                        <li class="menu-item">
+                            <div class="item-info">
+                                <div class="item-title">DOUBLE DELIGHT BITES <span style="font-weight:600; font-size:0.85rem; opacity:0.85; margin-left:6px;">(20 PIECES)</span></div>
+                                <div class="item-desc">Double the fun, double the joy.</div>
+                            </div>
+                            <div class="item-price" aria-label="Price forty cedis">₵40</div>
+                        </li>
+
+                        <li class="menu-item">
+                            <div class="item-info">
+                                <div class="item-title">FLUFF FRENZY FEAST <span style="font-weight:600; font-size:0.85rem; opacity:0.85; margin-left:6px;">(30 PIECES)</span></div>
+                                <div class="item-desc">A feast for pancake lovers — shareable and satisfying.</div>
+                            </div>
+                            <div class="item-price" aria-label="Price fifty cedis">₵50</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="syrup-badge" aria-hidden="true">
+                    SYRUP • ₵10 / cup
+                </div>
+
+                <div class="contact-row" aria-label="Contact and social">
+                    <div class="contact-item" aria-hidden="false"><span>💬</span><span>0538293775</span></div>
+                    <div class="contact-item" aria-hidden="false"><span>📷</span><span>@sparkssnacks</span></div>
+                    <a class="order-now" href="order.html">🛵 ORDER NOW</a>
+                </div>
+            </section>
+
+            <aside class="right-card" role="complementary" aria-label="Pancake image">
+                <figure class="pancake-figure" aria-hidden="false">
+                    <img
+                        src="https://images.pexels.com/photos/718739/pexels-photo-718739.jpeg?auto=compress&cs=tinysrgb&w=1200"
+                        alt="Stack of pancakes with syrup and berries"
+                        loading="lazy"
+                        width="1200"
+                        height="800">
+                </figure>
+            </aside>
+        </main>
+
+        <footer style="margin-top:28px; color:#fff; opacity:0.9;">
+            <small>&copy; <span id="year"></span> Sparks Snack Bar — Delicious pancakes made with love.</small>
+        </footer>
     </div>
+
+    <script>
+        // Small enhancement: set the year
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
 </body>
 </html>
